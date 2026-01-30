@@ -77,6 +77,19 @@ celery -A url_shortener worker --loglevel=info
 3.  **Create a Link:** Paste a long URL, optionally pick a custom name, and hit "Shorten".
 4.  **Share:** Copy your new short link or download the QR code.
 
+## API Documentation
+
+SnapURL comes with a fully documented REST API powered by OpenAPI 3.0.
+
+- **Swagger UI:** `http://localhost:8000/api/schema/swagger-ui/` (Interactive docs)
+- **Redoc:** `http://localhost:8000/api/schema/redoc/` (Clean reference)
+- **Schema:** `http://localhost:8000/api/schema/` (Raw JSON/YAML)
+
+### Authentication
+The API uses JWT (JSON Web Tokens). 
+1. Get your tokens via `/api/auth/login/`.
+2. For protected endpoints, include the header: `Authorization: Bearer <your_access_token>`.
+
 ## Project Workflows
 
 Here is a look under the hood at how the data flows through the system.
