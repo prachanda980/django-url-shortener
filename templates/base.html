@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -108,7 +109,7 @@
             flex: 1;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2rem 1rem;
             width: 100%;
         }
 
@@ -130,10 +131,6 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
         .form-control {
             width: 100%;
             padding: 0.8rem 1rem;
@@ -145,44 +142,91 @@
             transition: border-color 0.3s ease;
         }
 
+        /* Select specific styling */
+        select.form-control {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.5em;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        select.form-control option {
+            background-color: var(--bg-dark);
+            color: white;
+            padding: 10px;
+        }
+
+
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
         }
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        h1, h2, h3 {
+        h1,
+        h2,
+        h3 {
             margin-bottom: 1rem;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .animate-fade-in {
             animation: fadeIn 0.8s ease forwards;
         }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem !important;
+            }
+
+            .container {
+                padding: 1.5rem 0.75rem;
+            }
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
     <nav>
         <a href="/" class="logo">SnapURL</a>
         <div class="nav-links">
             {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}">Dashboard</a>
-                <a href="{% url 'profile' %}">Profile</a>
-                <a href="{% url 'logout' %}" class="btn btn-primary" style="background: transparent; border: 1px solid var(--primary);">Logout</a>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'profile' %}">Profile</a>
+            <a href="{% url 'logout' %}" class="btn btn-primary"
+                style="background: transparent; border: 1px solid var(--primary);">Logout</a>
             {% else %}
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'register' %}" class="btn btn-primary">Sign Up</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Sign Up</a>
             {% endif %}
         </div>
     </nav>
@@ -195,4 +239,5 @@
         &copy; 2026 SnapURL. Built with Django & Performance in mind.
     </footer>
 </body>
+
 </html>
