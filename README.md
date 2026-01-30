@@ -12,61 +12,71 @@ A robust URL shortening service built with Django, featuring asynchronous proces
 - **User Authentication:** Secure registration and login system to manage personal links.
 - **API Documentation:** Integrated OpenAPI 3.0 (Swagger/Redoc) support.
 
-## Getting Started
+## Quick Start (Docker) - Recommended
 
-Want to run this locally? Awesome. Here is exactly how to do it.
+The easiest way to run the application is using Docker Compose.
+
+1.  **Prepare Environment Variables:**
+    ```bash
+    cp .env.example .env
+    ```
+    (Optional: Edit `.env` to change settings like `SECRET_KEY` or `DEBUG`)
+
+2.  **Grant Execution Permissions:**
+    ```bash
+    chmod +x entrypoint.sh
+    ```
+
+3.  **Launch the Application:**
+    ```bash
+    docker compose up --build
+    ```
+    The web app will be available at `http://localhost:8000`. Hot-reloading is enabled by default in this mode.
+
+---
+
+## Alternative: Manual Setup (Local)
+
+If you prefer to run it without Docker, follow these steps.
 
 ### Prerequisites
-You'll need Python installed (I recommend 3.12+), and you also need **Redis** running on your backend (we use it for the task queue).
+You'll need Python 3.12+ and **Redis** installed and running on your system.
 
 ### Step-by-Step Setup
 
-1.  **Clone the repo:**
+1.  **Clone the Repo:**
     ```bash
     git clone git@github.com:prachanda980/django-url-shortener.git
     cd vrittech
     ```
 
-2.  **Set up your environment:**
-    It is always best to work in a virtual environment.
+2.  **Prepare Environment:**
     ```bash
+    cp .env.example .env
     python3 -m venv venv
     source venv/bin/activate
-    ```
-
-3.  **Install the goods:**
-    Grab all the dependencies.
-    ```bash
     pip install -r requirements.txt
     ```
 
-4.  **Database setup:**
-    Run the migrations to set up your SQLite database (or whatever you configure).
+3.  **Database & Static Files:**
     ```bash
     python manage.py migrate
+    python manage.py collectstatic --noinput
     ```
 
-5.  **Create a User:**
-    You'll need an admin account to peek at the admin panel.
+4.  **Running the Components:**
+
+    You need to run the web server and the background worker simultaneously.
+
+    **Web Server:**
     ```bash
-    python manage.py createsuperuser
+    python manage.py runserver
     ```
 
-## Running the App
-
-This app has two parts that need to run at the same time: the web server and the background worker.
-
-**Terminal 1: The Web Server**
-```bash
-python manage.py runserver
-```
-Go to `http://localhost:8000` in your browser. You should see the landing page!
-
-**Terminal 2: The Background Worker**
-This little guy handles the QR code generation and key assignment.
-```bash
-celery -A url_shortener worker --loglevel=info
-```
+    **Celery Worker:**
+    ```bash
+    celery -A url_shortener worker --loglevel=info
+    ```
 
 ## How to Use It
 
