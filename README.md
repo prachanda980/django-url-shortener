@@ -51,8 +51,9 @@ SnapURL comes with a fully documented REST API powered by OpenAPI 3.0.
 ```mermaid
 graph TD
     AuthUser["Authenticated User"] -->|POST /dashboard/| DashboardView
-    DashboardView -->|Check Integrity| KeyCheck{"Key Taken?"}
-    KeyCheck -- No --> CreateModel["ShortURL.objects.create"]
+    DashboardView -->|Check Integrity| KeyCheck{"Key Available?"}
+    KeyCheck -- Yes --> CreateModel["ShortURL.objects.create"]
+    KeyCheck -- No --> MessageError["Show Error Alert (Already Taken)"]
     CreateModel -->|Trigger Async| CeleryTask["Celery: generate_short_key_task"]
     
     subgraph Real-time Update
