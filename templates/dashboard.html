@@ -88,6 +88,31 @@
         color: #f87171;
         border-color: rgba(239, 68, 68, 0.3);
     }
+
+    .qr-container {
+        width: 60px;
+        height: 60px;
+        background: white;
+        padding: 4px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+    }
+
+    .qr-container:hover {
+        transform: scale(2.5);
+        z-index: 10;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .qr-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 </style>
 {% endblock %}
 
@@ -130,7 +155,12 @@
     <div class="url-list">
         {% for url in urls %}
         <div class="url-item">
-            <div style="flex: 1;">
+            {% if url.qr_code %}
+            <div class="qr-container" title="Hover to enlarge">
+                <img src="{{ url.qr_code.url }}" alt="QR Code" class="qr-img">
+            </div>
+            {% endif %}
+            <div style="flex: 1; margin-left: 1.5rem;">
                 <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.25rem;">
                     <a href="/{{ url.short_key|default:url.custom_key }}/" target="_blank" class="short-link">
                         snap.url/{{ url.short_key|default:url.custom_key }}
