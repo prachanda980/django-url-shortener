@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+.git/
+.env
+db.sqlite3
+static/
+media/
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.gemini/
