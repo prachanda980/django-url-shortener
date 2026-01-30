@@ -113,6 +113,52 @@
         height: 100%;
         object-fit: contain;
     }
+
+    @media (max-width: 768px) {
+        .url-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+            text-align: left !important;
+        }
+
+        .url-item>div {
+            margin-left: 0 !important;
+            width: 100%;
+        }
+
+        .url-item>div:last-child {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 1rem;
+            text-align: left !important;
+        }
+
+        .short-link {
+            font-size: 1rem;
+            word-break: break-all;
+        }
+
+        .original-link {
+            max-width: 100%;
+            word-break: break-all;
+            white-space: normal;
+        }
+
+        form>div {
+            flex-direction: column;
+        }
+
+        form input {
+            width: 100% !important;
+        }
+
+        h1 {
+            font-size: 2rem !important;
+        }
+    }
 </style>
 {% endblock %}
 
