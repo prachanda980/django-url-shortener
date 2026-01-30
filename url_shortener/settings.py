@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-j*hktn0d!ai)guxq7uiqeh#ge*dl33wn6iqk0#)$a60^j*vmh+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.18.7', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -164,7 +164,7 @@ LOGIN_URL = 'login'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-SITE_URL = 'http://127.0.0.1:8000'
+SITE_URL = 'http://192.168.18.7:8000'
 
 # Logging Configuration
 LOGGING = {
