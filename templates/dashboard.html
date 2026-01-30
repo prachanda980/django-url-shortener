@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | SnapURL{% endblock %}
+
+{% block extra_css %}
+<style>
+    .url-list {
+        margin-top: 2rem;
+        display: grid;
+        gap: 1rem;
+    }
+
+    .url-item {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid var(--glass-border);
+        padding: 1.2rem;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: transform 0.2s;
+    }
+
+    .url-item:hover {
+        transform: scale(1.01);
+        background: rgba(30, 41, 59, 0.6);
+    }
+
+    .short-link {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 1.1rem;
+    }
+
+    .original-link {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        max-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .stats {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .status-done {
+        background: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+    }
+
+    .status-pending {
+        background: rgba(234, 179, 8, 0.2);
+        color: #facc15;
+    }
+
+    .status-failed {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        border: 1px solid transparent;
+    }
+
+    .alert-success {
+        background: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+        border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .alert-error {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 3rem; text-align: center;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Shorten a URL</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Input your long URL and get a snappy short code instantly.
+    </p>
+
+    {% if messages %}
+    <div style="max-width: 900px; margin: 0 auto 1.5rem auto;">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="glass-card" style="max-width: 900px; margin: 0 auto;">
+        <form method="post" style="display: flex; flex-direction: column; gap: 1rem;">
+            {% csrf_token %}
+            <div style="display: flex; gap: 1rem;">
+                <input type="url" name="original_url" class="form-control" placeholder="Paste your long link here..."
+                    required style="flex: 2;">
+                <input type="text" name="custom_key" class="form-control" placeholder="Custom Alias (Optional)"
+                    style="flex: 1;">
+            </div>
+            <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2rem;">Shorten Link</button>
+        </form>
+    </div>
+</div>
+
+<div class="dashboard-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3>Your SnapLinks</h3>
+        <span style="color: var(--text-muted); font-size: 0.9rem;">{{ urls|length }} total links</span>
+    </div>
+
+    <div class="url-list">
+        {% for url in urls %}
+        <div class="url-item">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.25rem;">
+                    <a href="/{{ url.short_key|default:url.custom_key }}/" target="_blank" class="short-link">
+                        snap.url/{{ url.short_key|default:url.custom_key }}
+                    </a>
+                    <span
+                        class="status-badge {% if url.status == 'done' %}status-done{% elif url.status == 'pending' %}status-pending{% else %}status-failed{% endif %}">
+                        {{ url.status }}
+                    </span>
+                </div>
+                <div class="original-link">{{ url.original_url }}</div>
+            </div>
+            <div style="text-align: right; display: flex; align-items: center; gap: 2rem;">
+                <div style="text-align: center;">
+                    <div style="font-size: 1.1rem; font-weight: 600;">{{ url.click_count }}</div>
+                    <div class="stats" style="font-size: 0.7rem;">CLICKS</div>
+                </div>
+                <div class="stats">{{ url.created_at|date:"M d, Y" }}</div>
+            </div>
+        </div>
+        {% empty %}
+        <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+            <p>No links yet. Start shortening!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

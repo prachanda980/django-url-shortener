@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Register | SnapURL{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 3rem auto;">
+    <div class="glass-card">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Create Account</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div style="color: #ef4444; font-size: 0.8rem; margin-top: 0.25rem;">
+                    {{ field.errors|first }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem; margin-top: 1rem;">Sign
+                Up</button>
+        </form>
+        <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted);">
+            Already have an account? <a href="{% url 'login' %}"
+                style="color: var(--primary); text-decoration: none;">Login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

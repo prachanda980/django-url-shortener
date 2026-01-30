@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}404 Not Found - SnapURL{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 60vh; text-align: center;">
+    <div class="glass-card" style="max-width: 500px; padding: 3rem;">
+        <h1
+            style="font-size: 6rem; background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">
+            404</h1>
+        <h2 style="margin-bottom: 1rem;">Link Not Found</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+            The link you are looking for doesn't exist, has expired, or is broken.
+        </p>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile | SnapURL{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 4rem auto;">
+    <div class="glass-card">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div
+                style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2rem; font-weight: 700;">
+                {{ user.first_name|first }}{{ user.last_name|first }}
+            </div>
+            <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+            <p style="color: var(--text-muted);">{{ user.email }}</p>
+        </div>
+
+        <div style="border-top: 1px solid var(--glass-border); padding-top: 2rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="color: var(--text-muted);">Account Created</span>
+                <span>{{ user.date_joined|date:"F j, Y" }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="color: var(--text-muted);">Gender</span>
+                <span>{{ user.get_gender_display|default:"Not specified" }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Active Links</span>
+                <span>{{ user.urls.count }}</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 2.5rem; text-align: center;">
+            <a href="{% url 'api_user_detail' %}" target="_blank" class="btn"
+                style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--glass-border);">View
+                API Data (JSON)</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
