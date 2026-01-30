@@ -1,18 +1,16 @@
-# SnapURL - The Friendly URL Shortener
+# Django URL Shortener
 
-Hey there! 👋 Welcome to SnapURL. This is a personal project I built to solve a simple problem: turning long, ugly URLs into short, shareable ones, without all the corporate clutter.
+A robust URL shortening service built with Django, featuring asynchronous processing, custom aliases, and automated QR code generation.
 
-I wanted something that was fast, easy to use, and looked good while doing it. So, I built this using Django, threw in some Celery for async processing (gotta keep it snappy!), and wrapped it all in a nice glassmorphism UI.
+## Features
 
-## What's Inside?
-
-Here's the cool stuff this project can do:
- - **Shorten Anything:** Turn mile-long links into short `snap.url/xyz` links.
- - **Custom Aliases:** Want `snap.url/my-awesome-link`? You got it.
- - **QR Codes:** Automatically generates a QR code for every link.
- - **Track Your clicks:** A dashboard that tells you how many people clicked your links.
- - **Async Power:** We use Celery and Redis to handle the heavy lifting in the background, so the site never lags.
- - **Secure:** Full user registration and login needed to manage your links.
+- **URL Shortening:** Generate short, unique keys for long URLs using Base62 encoding.
+- **Custom Aliases:** Users can specify a custom short code (slug) for their links.
+- **QR Code Generation:** Automated QR code generation for every link via background tasks.
+- **Click Tracking:** Real-time tracking and display of click counts for each link.
+- **Async Processing:** Background task execution using Celery and Redis for key and QR generation.
+- **User Authentication:** Secure registration and login system to manage personal links.
+- **API Documentation:** Integrated OpenAPI 3.0 (Swagger/Redoc) support.
 
 ## Getting Started
 
@@ -72,10 +70,10 @@ celery -A url_shortener worker --loglevel=info
 
 ## How to Use It
 
-1.  **Sign Up:** Go to `/register/` and create an account.
-2.  **Dashboard:** Once logged in, you'll land on the dashboard.
-3.  **Create a Link:** Paste a long URL, optionally pick a custom name, and hit "Shorten".
-4.  **Share:** Copy your new short link or download the QR code.
+1.  **Register:** Create an account at `/register/`.
+2.  **Access Dashboard:** Log in to view your `/dashboard/`.
+3.  **Shorten URL:** Input a long URL and an optional custom alias.
+4.  **Track Clicks:** Monitor click statistics directly on the dashboard.
 
 ## API Documentation
 
