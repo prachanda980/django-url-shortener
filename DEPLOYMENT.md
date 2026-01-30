@@ -28,6 +28,11 @@ sudo usermod -aG docker $USER
    ```
    Edit `.env` and set your `SECRET_KEY`, `ALLOWED_HOSTS`, and `SITE_URL`.
 
+3. **Grant execution permissions**:
+   ```bash
+   chmod +x entrypoint.sh
+   ```
+
 ## 3. Deployment
 
 Run the follow command to build and start the services:
