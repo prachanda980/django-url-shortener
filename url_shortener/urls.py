@@ -18,13 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from accounts.views import RedirectView
+from shortener.views import RedirectView
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
+    path('', include('shortener.urls')),
     path('api/', include('shortener.api.urls')),
     path('api/auth/', include('accounts.api.urls')),
     # OpenAPI Schema & Documentation
