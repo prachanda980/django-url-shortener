@@ -2,8 +2,24 @@
 
 {% block title %}Profile | SnapURL{% endblock %}
 
+{% block extra_css %}
+<style>
+    @media (max-width: 768px) {
+        .stat-row {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.25rem;
+        }
+
+        .stat-row span:last-child {
+            font-weight: 600;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div style="max-width: 600px; margin: 4rem auto;">
+<div style="max-width: 600px; margin: 2rem auto; padding: 0 1rem;">
     <div class="glass-card">
         <div style="text-align: center; margin-bottom: 2rem;">
             <div
@@ -15,15 +31,15 @@
         </div>
 
         <div style="border-top: 1px solid var(--glass-border); padding-top: 2rem;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+            <div class="stat-row" style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
                 <span style="color: var(--text-muted);">Account Created</span>
                 <span>{{ user.date_joined|date:"F j, Y" }}</span>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+            <div class="stat-row" style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
                 <span style="color: var(--text-muted);">Gender</span>
                 <span>{{ user.get_gender_display|default:"Not specified" }}</span>
             </div>
-            <div style="display: flex; justify-content: space-between;">
+            <div class="stat-row" style="display: flex; justify-content: space-between;">
                 <span style="color: var(--text-muted);">Active Links</span>
                 <span>{{ user.urls.count }}</span>
             </div>
