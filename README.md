@@ -25,7 +25,7 @@ You'll need Python installed (I recommend 3.12+), and you also need **Redis** ru
 
 1.  **Clone the repo:**
     ```bash
-    git clone <your-repo-url>
+    git clone git@github.com:prachanda980/django-url-shortener.git
     cd vrittech
     ```
 
