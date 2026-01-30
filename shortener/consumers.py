@@ -16,7 +16,6 @@ class URLConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-        print(f"WebSocket connected: {self.channel_name}")
 
     async def disconnect(self, close_code):
         # Leave the group
@@ -30,5 +29,4 @@ class URLConsumer(AsyncWebsocketConsumer):
         Handler for messages sent to the 'url_updates' group.
         """
         # Send message to WebSocket
-        print(f"Consumer sending update: {event['data'].get('action')}")
         await self.send(text_data=json.dumps(event['data']))

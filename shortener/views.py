@@ -4,8 +4,6 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.db import models, IntegrityError
 from django.contrib import messages
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from .models import ShortURL
 import logging
 
