@@ -6,7 +6,7 @@ services:
   web:
     build: .
     container_name: url_shortener_web
-    command: web
+    command: dev
     volumes:
       - .:/app
       - static_volume:/app/static
