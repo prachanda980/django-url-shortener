@@ -84,49 +84,49 @@ Here is a look under the hood at how the data flows through the system.
 ### 1. User Registration
 ```mermaid
 graph TD
-    User[User] -->|GET /register/| RegisterView
-    RegisterView -->|Render| RegisterTemplate[registration/register.html]
+    User["User"] -->|GET /register/| RegisterView
+    RegisterView -->|Render| RegisterTemplate["registration/register.html"]
     User -->|POST /register/| RegisterView
-    RegisterView -->|Validate Form| FormValidation{Valid?}
+    RegisterView -->|Validate Form| FormValidation{"Valid?"}
     
     FormValidation -- No --> RegisterTemplate
-    FormValidation -- Yes --> CreateUser[User.objects.create_user]
-    CreateUser --> LoginUser[login(request, user)]
-    LoginUser --> Redirect[Redirect to /dashboard/]
+    FormValidation -- Yes --> CreateUser["User.objects.create_user"]
+    CreateUser --> LoginUser["login(request, user)"]
+    LoginUser --> Redirect["Redirect to /dashboard/"]
 ```
 
 ### 2. URL Creation (Dashboard)
 ```mermaid
 graph TD
-    AuthUser[Authenticated User] -->|POST /dashboard/| DashboardView
-    DashboardView -->|Check Integrity| KeyCheck{Key Taken?}
+    AuthUser["Authenticated User"] -->|POST /dashboard/| DashboardView
+    DashboardView -->|Check Integrity| KeyCheck{"Key Taken?"}
 
-    KeyCheck -- Yes --> MessageError[Show Error Alert]
+    KeyCheck -- Yes --> MessageError["Show Error Alert"]
     
-    KeyCheck -- No --> CreateModel[ShortURL.objects.create]
-    CreateModel -->|Trigger Async| CeleryTask[Celery: generate_short_key_task]
-    CreateModel --> MessageSuccess[Show Success Toast]
+    KeyCheck -- No --> CreateModel["ShortURL.objects.create"]
+    CreateModel -->|Trigger Async| CeleryTask["Celery: generate_short_key_task"]
+    CreateModel --> MessageSuccess["Show Success Toast"]
     
     subgraph Background Task
-        CeleryTask -->|Generate| Base62[Base62 Encoding]
+        CeleryTask -->|Generate| Base62["Base62 Encoding"]
         Base62 -->|Save| short_key
-        short_key -->|Generate| QRCode[Generate QR Code]
+        short_key -->|Generate| QRCode["Generate QR Code"]
     end
 ```
 
 ### 3. URL Redirection
 ```mermaid
 graph TD
-    Visitor[Visitor] -->|GET /<short_code>/| RedirectView
-    RedirectView -->|Switch| Lookup{Find URL}
+    Visitor["Visitor"] -->|GET /<short_code>/| RedirectView
+    RedirectView -->|Switch| Lookup{"Find URL"}
     
     Lookup -->|Short Key Match| URLObj
     Lookup -->|Custom Key Match| URLObj
-    Lookup -->|Not Found / Expired| Show404[Render 404.html]
+    Lookup -->|Not Found / Expired| Show404["Render 404.html"]
     
-    URLObj --> Increment[click_count += 1]
+    URLObj --> Increment["click_count += 1"]
     Increment -->|Save| Database
-    Database -->|302 Redirect| OriginalURL[Redirect to Original URL]
+    Database -->|302 Redirect| OriginalURL["Redirect to Original URL"]
 ```
 
 ## Tech Stack
