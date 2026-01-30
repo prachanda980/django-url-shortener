@@ -1,6 +1,8 @@
 from celery import shared_task
 from .models import ShortURL
 from .utils import encode_base62
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 import logging
 
 logger = logging.getLogger('shortener')
@@ -36,6 +38,25 @@ def generate_short_key_task(url_id):
         url_obj.qr_code.save(file_name, File(buffer), save=False)
         
         url_obj.save()
+        
+        # Broadcast the new URL
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "url_updates",
+            {
+                "type": "url.update",
+                "data": {
+                    "action": "new_url",
+                    "url_id": url_obj.id,
+                    "original_url": url_obj.original_url,
+                    "short_url": f"{settings.SITE_URL}/{url_obj.short_key or url_obj.custom_key}/",
+                    "click_count": url_obj.click_count,
+                    "status": url_obj.status,
+                    "qr_code": url_obj.qr_code.url if url_obj.qr_code else None
+                }
+            }
+        )
+        
         logger.info(f"Successfully processed URL ID: {url_id}. Short key: {url_obj.short_key}")
     except ShortURL.DoesNotExist:
         logger.error(f"URL ID {url_id} not found in task.")

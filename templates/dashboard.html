@@ -152,12 +152,18 @@
         <span style="color: var(--text-muted); font-size: 0.9rem;">{{ urls|length }} total links</span>
     </div>
 
-    <div class="url-list">
+    <div class="url-list" id="url-list">
         {% for url in urls %}
-        <div class="url-item">
+        <div class="url-item" id="url-item-{{ url.id }}">
             {% if url.qr_code %}
             <div class="qr-container" title="Hover to enlarge">
                 <img src="{{ url.qr_code.url }}" alt="QR Code" class="qr-img">
+            </div>
+            {% else %}
+            <div class="qr-placeholder" id="qr-placeholder-{{ url.id }}" style="display: none;">
+                <div class="qr-container" title="Hover to enlarge">
+                    <img src="" alt="QR Code" class="qr-img">
+                </div>
             </div>
             {% endif %}
             <div style="flex: 1; margin-left: 1.5rem;">
@@ -165,16 +171,14 @@
                     <a href="/{{ url.short_key|default:url.custom_key }}/" target="_blank" class="short-link">
                         snap.url/{{ url.short_key|default:url.custom_key }}
                     </a>
-                    <span
-                        class="status-badge {% if url.status == 'done' %}status-done{% elif url.status == 'pending' %}status-pending{% else %}status-failed{% endif %}">
-                        {{ url.status }}
-                    </span>
+                    <span class="status-badge status-{{ url.status }}"> {{ url.status }} </span>
                 </div>
                 <div class="original-link">{{ url.original_url }}</div>
             </div>
             <div style="text-align: right; display: flex; align-items: center; gap: 2rem;">
                 <div style="text-align: center;">
-                    <div style="font-size: 1.1rem; font-weight: 600;">{{ url.click_count }}</div>
+                    <div style="font-size: 1.1rem; font-weight: 600;" class="click-count-display"
+                        id="click-count-{{ url.id }}">{{ url.click_count }}</div>
                     <div class="stats" style="font-size: 0.7rem;">CLICKS</div>
                 </div>
                 <div class="stats">{{ url.created_at|date:"M d, Y" }}</div>
@@ -187,4 +191,63 @@
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const urlList = document.getElementById('url-list');
+    function connect() {
+        const socketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const socketUrl = `${socketProtocol}//${window.location.host}/ws/urls/`;
+
+        console.log('Connecting to WebSocket:', socketUrl);
+        const socket = new WebSocket(socketUrl);
+
+        socket.onopen = function (e) {
+            console.log('WebSocket connection established');
+        };
+
+        socket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log('Update received:', data);
+
+            if (data.action === 'new_url') {
+                const existingItem = document.getElementById(`url-item-${data.url_id}`);
+                if (existingItem) {
+                    const statusBadge = existingItem.querySelector('.status-badge');
+                    if (statusBadge) {
+                        statusBadge.innerText = data.status;
+                        statusBadge.className = `status-badge status-${data.status}`;
+                    }
+
+                    const shortLink = existingItem.querySelector('.short-link');
+                    if (shortLink) {
+                        shortLink.href = data.short_url;
+                        shortLink.innerText = data.short_url.replace('http://', '').replace('https://', '');
+                    }
+
+                    if (data.qr_code) {
+                        const placeholder = document.getElementById(`qr-placeholder-${data.url_id}`);
+                        if (placeholder) {
+                            placeholder.querySelector('img').src = data.qr_code;
+                            placeholder.style.display = 'block';
+                        }
+                    }
+                }
+            }
+        };
+
+        socket.onclose = function (e) {
+            console.error('WebSocket closed. Reconnecting in 2s...', e.reason);
+            setTimeout(connect, 2000);
+        };
+
+        socket.onerror = function (err) {
+            console.error('WebSocket error:', err);
+            socket.close();
+        };
+    }
+
+    connect();
+</script>
 {% endblock %}
