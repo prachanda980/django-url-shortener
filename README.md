@@ -71,8 +71,3 @@ graph TD
     Increment -->|302 Redirect| OriginalURL["External URL"]
 ```
 
-## Contributing
-
-Feel free to open an issue or send a PR.
-
-Happy Coding! 🚀
